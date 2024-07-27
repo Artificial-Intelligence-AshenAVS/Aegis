@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AEGIS LLM SafeGuard Admin Panel</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: url("{{ url_for('static', filename='img/background.jpg') }}") no-repeat center center fixed;
+            background-size: cover;
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            padding: 20px;
+            background: rgba(0, 0, 0, 0.7); /* Dark translucent header background */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .header img {
+            height: 60px;
+            margin-right: 20px;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ffffff; /* White text */
+        }
+
+        .container {
+            background: rgba(255, 255, 255, 0.9); /* Light translucent container background */
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+            width: 90%;
+            max-width: 800px;
+            margin: 20px;
+            color: #333333; /* Dark text */
+        }
+
+        h2 {
+            font-size: 24px;
+            font-weight: 500;
+            margin-bottom: 20px;
+            color: #333333;
+        }
+
+        form {
+            margin-bottom: 30px;
+        }
+
+        label {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 10px;
+            color: #333333;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 24px);
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #ffffff;
+            color: #333333;
+            font-size: 16px;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #8A2BE2;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #5e1da4;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        ul li {
+            background: #ffffff;
+            margin: 10px 0;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            color: #333333;
+        }
+
+        ul li input[type="checkbox"] {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <img src="{{ url_for('static', filename='img/logo.png') }}" alt="Logo">
+        <h1>AEGIS LLM SafeGuard Admin Panel</h1>
+    </div>
+    <div class="container">
+        <h2>Banned Words</h2>
+        <form action="{{ url_for('add_banned_word') }}" method="POST">
+            <label for="word">Add Banned Word:</label>
+            <input type="text" id="word" name="word" required>
+            <button type="submit">Add</button>
+        </form>
+        <form action="{{ url_for('delete_banned_word') }}" method="POST">
+            <ul>
+                {% for word in banned_words %}
+                <li>
+                    <input type="checkbox" name="banned_words" value="{{ word }}">
+                    {{ word }}
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Delete Selected</button>
+        </form>
+
+        <h2>Sensitive Patterns</h2>
+        <form action="{{ url_for('add_sensitive_pattern') }}" method="POST">
+            <label for="pattern">Add Sensitive Pattern:</label>
+            <input type="text" id="pattern" name="pattern" required>
+            <button type="submit">Add</button>
+        </form>
+        <form action="{{ url_for('delete_sensitive_pattern') }}" method="POST">
+            <ul>
+                {% for pattern in sensitive_patterns %}
+                <li>
+                    <input type="checkbox" name="sensitive_patterns" value="{{ pattern }}">
+                    {{ pattern }}
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Delete Selected</button>
+        </form>
+
+        <h2>System Prompt Patterns</h2>
+        <form action="{{ url_for('add_system_prompt_pattern') }}" method="POST">
+            <label for="pattern">Add System Prompt Pattern:</label>
+            <input type="text" id="pattern" name="pattern" required>
+            <button type="submit">Add</button>
+        </form>
+        <form action="{{ url_for('delete_system_prompt_pattern') }}" method="POST">
+            <ul>
+                {% for pattern in system_prompt_patterns %}
+                <li>
+                    <input type="checkbox" name="system_prompt_patterns" value="{{ pattern }}">
+                    {{ pattern }}
+                </li>
+                {% endfor %}
+            </ul>
+            <button type="submit">Delete Selected</button>
+        </form>
+    </div>
+</body>
+</html>

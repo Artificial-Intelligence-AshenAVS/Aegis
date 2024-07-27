@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Chat</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #8A2BE2, #007FFF);
+            color: #ffffff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+
+        h1 {
+            margin-bottom: 25px;
+            color: #ffffff;
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .chat-history {
+            background: rgba(0, 0, 0, 0.7);
+            padding: 20px;
+            border-radius: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 25px;
+            text-align: left;
+            color: #ffffff;
+            font-size: 16px;
+        }
+
+        .chat-history p {
+            margin: 10px 0;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-input input[type="text"] {
+            flex: 1;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            margin-right: 10px;
+            background-color: #ffffff;
+            color: #333333;
+            outline: none;
+        }
+
+        .chat-input button {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #8A2BE2;
+            color: #ffffff;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .chat-input button:hover {
+            background-color: #5e1da4;
+        }
+
+        .chat-history p strong {
+            color: #8A2BE2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>LLM Chat</h1>
+        <div class="chat-history" id="chat-history"></div>
+        <div class="chat-input">
+            <input type="text" id="user-input" placeholder="Type your message here..." required>
+            <button onclick="sendMessage()">Send</button>
+        </div>
+    </div>
+    <script>
+        async function sendMessage() {
+            const userInput = document.getElementById('user-input').value;
+            if (!userInput) return;
+
+            const chatHistory = document.getElementById('chat-history');
+            chatHistory.innerHTML += `<p><strong>You:</strong> ${userInput}</p>`;
+
+            const response = await fetch('/query', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ input_text: userInput }),
+            });
+            const result = await response.json();
+
+            chatHistory.innerHTML += `<p><strong>LLM:</strong> ${result.response}</p>`;
+            document.getElementById('user-input').value = '';
+            chatHistory.scrollTop = chatHistory.scrollHeight;
+        }
+    </script>
+</body>
+</html>
